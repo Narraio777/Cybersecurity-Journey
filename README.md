@@ -5,8 +5,8 @@ Automation Technician apprentice learning cybersecurity.
 
 ## Progress
 - TryHackMe: Pre-Security path (80% complete)
-- Linux Fundamentals: Complete
-
+- Linux Fundamentals: Completed
+- Tryhackme profile tryhackme.com/p/Narraio777
 ## Goals
 - Complete Jr Pentester path
 - Learn Python basics
