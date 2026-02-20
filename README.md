@@ -4,7 +4,8 @@
 Automation Technician apprentice learning cybersecurity.
 
 ## Progress
-- TryHackMe: Pre-Security path (80% complete)
+- TryHackMe: Pre-Security path Completed
+- TryHackMe: Security + path started
 - Linux Fundamentals: Completed
 - [TryHackMe Profile](https://tryhackme.com/p/Klebeband476)
 ## Goals
