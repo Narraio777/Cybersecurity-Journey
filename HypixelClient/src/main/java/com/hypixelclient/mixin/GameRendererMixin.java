@@ -15,13 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
     @Shadow private MinecraftClient client;
 
-    @Inject(at = @At("HEAD"), method = "renderCrosshair", cancellable = true)
+    @Inject(at = @At("HEAD"), method = "renderCrosshair")
     private void onRenderCrosshair(DrawContext context, float tickDelta, CallbackInfo ci) {
         if (HypixelClient.getInstance() == null) return;
         CustomCrosshairModule mod = HypixelClient.getInstance().getModuleManager().get(CustomCrosshairModule.class);
         if (mod != null && mod.isEnabled()) {
-            mod.render(context, client);
-            ci.cancel();
+            // crosshair rendering handled in HUD callback
         }
     }
 }
