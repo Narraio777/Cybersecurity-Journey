@@ -32,6 +32,6 @@ public class CPSCounterModule extends Module {
         String text = "CPS: " + leftClicks.size() + " | " + rightClicks.size();
         int x = client.getWindow().getScaledWidth() - client.textRenderer.getWidth(text) - 2;
         int y = client.getWindow().getScaledHeight() - 20;
-        context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, true);
+        context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, false);
     }
 }

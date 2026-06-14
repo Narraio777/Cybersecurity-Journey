@@ -18,6 +18,6 @@ public class PingDisplayModule extends Module {
         if (entry == null) return;
         int ping = entry.getLatency();
         int color = ping < 80 ? 0xFF00FF00 : ping < 150 ? 0xFFFFFF00 : 0xFFFF0000;
-        context.drawText(client.textRenderer, ping + "ms", 2, client.getWindow().getScaledHeight() - 40, color, true);
+        context.drawText(client.textRenderer, ping + "ms", 2, client.getWindow().getScaledHeight() - 40, color, false);
     }
 }

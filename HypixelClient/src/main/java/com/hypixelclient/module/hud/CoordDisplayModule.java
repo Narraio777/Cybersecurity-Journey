@@ -18,6 +18,6 @@ public class CoordDisplayModule extends Module {
         String text = String.format("XYZ: %d / %d / %d", pos.getX(), pos.getY(), pos.getZ());
         int x = 2;
         int y = client.getWindow().getScaledHeight() - 20;
-        context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, true);
+        context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, false);
     }
 }

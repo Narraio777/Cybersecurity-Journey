@@ -15,6 +15,6 @@ public class FPSDisplayModule extends Module {
         if (!isEnabled()) return;
         int fps = client.getCurrentFps();
         int color = fps >= 60 ? 0xFF00FF00 : fps >= 30 ? 0xFFFFFF00 : 0xFFFF0000;
-        context.drawText(client.textRenderer, fps + " FPS", 2, client.getWindow().getScaledHeight() - 30, color, true);
+        context.drawText(client.textRenderer, fps + " FPS", 2, client.getWindow().getScaledHeight() - 30, color, false);
     }
 }

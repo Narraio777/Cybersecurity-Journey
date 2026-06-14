@@ -25,7 +25,7 @@ public class ArmorHudModule extends Module {
                     int durability = stack.getMaxDamage() - stack.getDamage();
                     int max = stack.getMaxDamage();
                     int color = durability < max / 4 ? 0xFFFF0000 : durability < max / 2 ? 0xFFFFFF00 : 0xFF00FF00;
-                    context.drawText(client.textRenderer, String.valueOf(durability), x + (i * 18), y + 18, color, true);
+                    context.drawText(client.textRenderer, String.valueOf(durability), x + (i * 18), y + 18, color, false);
                 }
             }
         }

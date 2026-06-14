@@ -19,7 +19,7 @@ public class PotionHudModule extends Module {
             String name = effect.getEffectType().value().getName().getString();
             int duration = effect.getDuration() / 20;
             String text = name + " " + (duration > 0 ? duration + "s" : "**");
-            context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, true);
+            context.drawText(client.textRenderer, text, x, y, 0xFFFFFFFF, false);
             y += 11;
         }
     }
