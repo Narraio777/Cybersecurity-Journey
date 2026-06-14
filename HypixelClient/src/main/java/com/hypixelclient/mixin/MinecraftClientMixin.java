@@ -9,6 +9,7 @@ import com.hypixelclient.module.combat.TriggerBotModule;
 import com.hypixelclient.module.hud.CPSCounterModule;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
+import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
 import com.hypixelclient.module.movement.SpeedModule;
 import com.hypixelclient.module.movement.SprintResetModule;
@@ -32,6 +33,9 @@ public class MinecraftClientMixin {
 
         AutoBridgeModule autoBridge = HypixelClient.getInstance().getModuleManager().get(AutoBridgeModule.class);
         if (autoBridge != null) autoBridge.onTick(client);
+
+        NinjaBridgeModule ninjaBridge = HypixelClient.getInstance().getModuleManager().get(NinjaBridgeModule.class);
+        if (ninjaBridge != null) ninjaBridge.onTick(client);
 
         AutoSprintModule autoSprint = HypixelClient.getInstance().getModuleManager().get(AutoSprintModule.class);
         if (autoSprint != null && autoSprint.isEnabled() && !client.player.isSneaking()) {

@@ -67,6 +67,6 @@ public class HypixelAPIModule extends Module {
         if (!isEnabled()) return;
         int x = client.getWindow().getScaledWidth() / 2 - 50;
         int y = 2;
-        context.drawText(client.textRenderer, cachedStats, x, y, 0xFFFFFFFF, true);
+        context.drawText(client.textRenderer, cachedStats, x, y, 0xFFFFFFFF, false);
     }
 }
