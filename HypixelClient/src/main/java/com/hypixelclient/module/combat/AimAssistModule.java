@@ -9,7 +9,8 @@ import org.lwjgl.glfw.GLFW;
 
 public class AimAssistModule extends Module {
     private final Setting strength = addSetting(new Setting("Strength", 30, 0, 100, 5));
-    private final Setting range   = addSetting(new Setting("Range",    6,  1, 10,  1));
+    private final Setting range    = addSetting(new Setting("Range",    6,  1, 10,  1));
+    private final Setting speed    = addSetting(new Setting("Speed",    4,  1, 20,  1));
 
     public AimAssistModule() {
         super("AimAssist", "Smoothly pulls your aim towards the nearest player", Category.COMBAT, GLFW.GLFW_KEY_UNKNOWN);
@@ -45,12 +46,24 @@ public class AimAssistModule extends Module {
         float currentYaw   = client.player.getYaw();
         float currentPitch = client.player.getPitch();
 
+        // Normalize yaw difference to [-180, 180]
         float yawDiff = targetYaw - currentYaw;
         while (yawDiff >  180) yawDiff -= 360;
         while (yawDiff < -180) yawDiff += 360;
 
-        float s = (float) (strength.getValue() / 100.0);
-        client.player.setYaw(currentYaw + yawDiff * s);
-        client.player.setPitch(currentPitch + (targetPitch - currentPitch) * s);
+        float pitchDiff = targetPitch - currentPitch;
+
+        // Scale step by strength percentage
+        float s = (float)(strength.getValue() / 100.0);
+        float yawStep   = yawDiff   * s;
+        float pitchStep = pitchDiff * s;
+
+        // Clamp to max degrees per tick for smooth motion
+        float maxStep = (float) speed.getValue();
+        yawStep   = Math.max(-maxStep, Math.min(maxStep, yawStep));
+        pitchStep = Math.max(-maxStep, Math.min(maxStep, pitchStep));
+
+        client.player.setYaw(currentYaw + yawStep);
+        client.player.setPitch(currentPitch + pitchStep);
     }
 }
