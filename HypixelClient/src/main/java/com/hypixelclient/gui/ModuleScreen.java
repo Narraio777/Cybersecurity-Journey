@@ -21,7 +21,8 @@ public class ModuleScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        renderBackground(context, mouseX, mouseY, delta);
+        // Plain translucent darkening instead of renderBackground() — avoids MC's menu blur effect.
+        context.fill(0, 0, this.width, this.height, 0x88000000);
         context.drawCenteredTextWithShadow(textRenderer, "§bHypixelClient §7Modules", width / 2, 6, 0xFFFFFF);
 
         Category[] categories = Category.values();
