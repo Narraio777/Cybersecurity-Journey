@@ -3,6 +3,7 @@ package com.hypixelclient.module.movement;
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -23,11 +24,9 @@ public class AutoBridgeModule extends Module {
 
         if (client.player.getMainHandStack().isEmpty()) return;
 
-        Vec3d pos = client.player.getPos();
-        BlockPos bridgePos = new BlockPos((int) Math.floor(pos.x), (int) Math.floor(pos.y) - 1, (int) Math.floor(pos.z));
         HitResult hit = client.crosshairTarget;
         if (hit instanceof BlockHitResult blockHit) {
-            client.interactionManager.interactBlock(client.player, client.player.preferredHand, blockHit);
+            client.interactionManager.interactBlock(client.player, Hand.MAIN_HAND, blockHit);
         }
     }
 }

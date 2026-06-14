@@ -1,13 +1,13 @@
 package com.hypixelclient.module;
 
 import com.hypixelclient.module.api.HypixelAPIModule;
-import com.hypixelclient.module.hud.ArmorHudModule;
-import com.hypixelclient.module.hud.KeystrokeHudModule;
-import com.hypixelclient.module.hud.PotionHudModule;
+import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.movement.AutoBridgeModule;
+import com.hypixelclient.module.movement.AutoSprintModule;
 import com.hypixelclient.module.movement.SafeWalkModule;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
 import com.hypixelclient.module.visual.FullBrightModule;
+import com.hypixelclient.module.visual.NoWeatherModule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,20 +16,27 @@ public class ModuleManager {
     private final List<Module> modules = new ArrayList<>();
 
     public ModuleManager() {
+        // HUD
         register(new ArmorHudModule());
         register(new PotionHudModule());
         register(new KeystrokeHudModule());
-        register(new HypixelAPIModule());
+        register(new CoordDisplayModule());
+        register(new FPSDisplayModule());
+        register(new PingDisplayModule());
+        register(new CPSCounterModule());
+        // Movement
+        register(new AutoSprintModule());
         register(new AutoBridgeModule());
         register(new SafeWalkModule());
+        // Visual
         register(new FullBrightModule());
         register(new CustomCrosshairModule());
+        register(new NoWeatherModule());
+        // API
+        register(new HypixelAPIModule());
     }
 
-    public void register(Module module) {
-        modules.add(module);
-    }
-
+    public void register(Module module) { modules.add(module); }
     public List<Module> getModules() { return modules; }
 
     public List<Module> getByCategory(Category category) {

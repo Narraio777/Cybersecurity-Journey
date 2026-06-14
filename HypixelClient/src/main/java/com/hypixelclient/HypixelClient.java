@@ -4,9 +4,7 @@ import com.hypixelclient.config.Config;
 import com.hypixelclient.keybind.KeybindManager;
 import com.hypixelclient.module.ModuleManager;
 import com.hypixelclient.module.api.HypixelAPIModule;
-import com.hypixelclient.module.hud.ArmorHudModule;
-import com.hypixelclient.module.hud.KeystrokeHudModule;
-import com.hypixelclient.module.hud.PotionHudModule;
+import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -31,9 +29,7 @@ public class HypixelClient implements ClientModInitializer {
         moduleManager = new ModuleManager();
         keybindManager = new KeybindManager(moduleManager);
 
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            keybindManager.onTick(client);
-        });
+        ClientTickEvents.END_CLIENT_TICK.register(client -> keybindManager.onTick(client));
 
         HudRenderCallback.EVENT.register((context, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
@@ -41,6 +37,10 @@ public class HypixelClient implements ClientModInitializer {
             moduleManager.get(ArmorHudModule.class).render(context, client);
             moduleManager.get(PotionHudModule.class).render(context, client);
             moduleManager.get(KeystrokeHudModule.class).render(context, client);
+            moduleManager.get(CoordDisplayModule.class).render(context, client);
+            moduleManager.get(FPSDisplayModule.class).render(context, client);
+            moduleManager.get(PingDisplayModule.class).render(context, client);
+            moduleManager.get(CPSCounterModule.class).render(context, client);
             moduleManager.get(HypixelAPIModule.class).render(context, client);
             moduleManager.get(CustomCrosshairModule.class).render(context, client);
         });
