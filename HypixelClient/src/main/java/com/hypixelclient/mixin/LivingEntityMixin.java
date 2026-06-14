@@ -2,6 +2,7 @@ package com.hypixelclient.mixin;
 
 import com.hypixelclient.HypixelClient;
 import com.hypixelclient.module.combat.VelocityModule;
+import com.hypixelclient.module.movement.SneakBridgeModule;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Vec3d;
@@ -22,9 +23,18 @@ public class LivingEntityMixin {
         if (self != client.player) return;
 
         VelocityModule velocity = HypixelClient.getInstance().getModuleManager().get(VelocityModule.class);
-        if (velocity == null || !velocity.isEnabled()) return;
+        if (velocity != null && velocity.isEnabled()) {
+            Vec3d v = self.getVelocity();
+            self.setVelocity(v.x * velocity.getHorizontal(), v.y * velocity.getVertical(), v.z * velocity.getHorizontal());
+            return;
+        }
 
-        Vec3d v = self.getVelocity();
-        self.setVelocity(v.x * velocity.getHorizontal(), v.y * velocity.getVertical(), v.z * velocity.getHorizontal());
+        // Auto-correct knockback while bridging so a hit can't knock you off the bridge.
+        SneakBridgeModule bridge = HypixelClient.getInstance().getModuleManager().get(SneakBridgeModule.class);
+        if (bridge != null && bridge.isCorrecting(client)) {
+            double keep = bridge.getKeepFactor();
+            Vec3d v = self.getVelocity();
+            self.setVelocity(v.x * keep, v.y, v.z * keep);
+        }
     }
 }

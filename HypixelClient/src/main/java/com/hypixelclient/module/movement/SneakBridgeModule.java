@@ -25,6 +25,8 @@ import java.util.Random;
 public class SneakBridgeModule extends Module {
     // Minimum ticks between placements (jitter adds ±1 tick randomly).
     private final Setting speed = addSetting(new Setting("Speed", 1, 1, 6, 1));
+    // How much knockback to cancel when hit while bridging (100 = fully anchored).
+    private final Setting kbCancel = addSetting(new Setting("KbCancel", 80, 0, 100, 10));
 
     // Fallback scan order if we can't infer a support block from movement.
     private static final Direction[] DIRS = {
@@ -32,27 +34,60 @@ public class SneakBridgeModule extends Module {
     };
 
     private int cooldown = 0;
+    private int lastHurtTime = 0;
     private final Random rng = new Random();
 
     public SneakBridgeModule() {
-        super("SneakBridge", "Speedbridge without sneak packets: auto-aims the perfect angle, places, instantly restores (AC-safe)", Category.MOVEMENT, GLFW.GLFW_KEY_UNKNOWN);
+        super("SneakBridge", "Speedbridge without sneak packets: auto-aims the perfect angle, auto-corrects when hit (AC-safe)", Category.MOVEMENT, GLFW.GLFW_KEY_UNKNOWN);
+    }
+
+    @Override
+    public void onEnable() {
+        lastHurtTime = 0;
+    }
+
+    // True while we're actively bridging over a gap with blocks in hand.
+    public boolean isCorrecting(MinecraftClient client) {
+        if (!isEnabled() || client.player == null || client.world == null) return false;
+        BlockPos below = client.player.getBlockPos().down();
+        return client.world.getBlockState(below).isAir()
+            && client.player.getMainHandStack().getItem() instanceof BlockItem;
+    }
+
+    // Fraction of incoming knockback velocity to keep (0 = fully cancel).
+    public double getKeepFactor() {
+        return 1.0 - kbCancel.getValue() / 100.0;
     }
 
     public void onTick(MinecraftClient client) {
         if (!isEnabled() || client.player == null || client.world == null) return;
         if (client.interactionManager == null) return;
 
-        if (cooldown > 0) { cooldown--; return; }
-
         boolean moving = client.options.forwardKey.isPressed()
                       || client.options.backKey.isPressed()
                       || client.options.leftKey.isPressed()
                       || client.options.rightKey.isPressed();
-        if (!moving) return;
 
         BlockPos below = client.player.getBlockPos().down();
-        if (!client.world.getBlockState(below).isAir()) return;
-        if (!(client.player.getMainHandStack().getItem() instanceof BlockItem)) return;
+        boolean overAir = client.world.getBlockState(below).isAir();
+        boolean hasBlock = client.player.getMainHandStack().getItem() instanceof BlockItem;
+
+        // Detect a fresh hit (hurtTime resets to max on damage, then counts down).
+        int hurt = client.player.hurtTime;
+        boolean gotHit = hurt > lastHurtTime;
+        lastHurtTime = hurt;
+
+        // Auto-correct: when hit mid-bridge, dampen leftover knockback and place NOW.
+        if (gotHit && overAir && hasBlock) {
+            double keep = getKeepFactor();
+            Vec3d v = client.player.getVelocity();
+            client.player.setVelocity(v.x * keep, v.y, v.z * keep);
+            cooldown = 0;
+        }
+
+        if (cooldown > 0) { cooldown--; return; }
+        if (!moving && !gotHit) return;
+        if (!overAir || !hasBlock) return;
 
         // Pick the block to place against. Preferred = the support block BEHIND your
         // movement (so the bridge extends along your path). Fall back to any solid face.
