@@ -1,5 +1,5 @@
 package com.hypixelclient.module;
 
 public enum Category {
-    HUD, MOVEMENT, VISUAL, API, MISC
+    HUD, COMBAT, MOVEMENT, VISUAL, API, MISC
 }

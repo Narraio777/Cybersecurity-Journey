@@ -1,6 +1,9 @@
 package com.hypixelclient.module;
 
 import com.hypixelclient.module.api.HypixelAPIModule;
+import com.hypixelclient.module.combat.AimAssistModule;
+import com.hypixelclient.module.combat.AutoClickerModule;
+import com.hypixelclient.module.combat.FastPlaceModule;
 import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
@@ -24,6 +27,10 @@ public class ModuleManager {
         register(new FPSDisplayModule());
         register(new PingDisplayModule());
         register(new CPSCounterModule());
+        // Combat
+        register(new AutoClickerModule());
+        register(new AimAssistModule());
+        register(new FastPlaceModule());
         // Movement
         register(new AutoSprintModule());
         register(new AutoBridgeModule());
