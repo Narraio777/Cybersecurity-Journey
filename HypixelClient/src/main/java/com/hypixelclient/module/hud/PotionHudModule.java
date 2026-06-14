@@ -8,14 +8,13 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 
 public class PotionHudModule extends Module {
     public PotionHudModule() {
-        super("PotionHUD", "Shows active potion effects with remaining duration", Category.HUD);
+        super("PotionHUD", "Shows active potion effects with duration", Category.HUD);
         setEnabled(true);
     }
 
     public void render(DrawContext context, MinecraftClient client) {
         if (!isEnabled() || client.player == null) return;
-        int x = 2;
-        int y = 2;
+        int x = 2, y = 2;
         for (StatusEffectInstance effect : client.player.getStatusEffects()) {
             String name = effect.getEffectType().value().getName().getString();
             int duration = effect.getDuration() / 20;

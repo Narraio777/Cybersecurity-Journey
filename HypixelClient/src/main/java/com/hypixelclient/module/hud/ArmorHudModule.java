@@ -9,14 +9,13 @@ import net.minecraft.item.ItemStack;
 
 public class ArmorHudModule extends Module {
     public ArmorHudModule() {
-        super("ArmorHUD", "Displays your armor and its durability on screen", Category.HUD);
+        super("ArmorHUD", "Displays your armor durability on screen", Category.HUD);
         setEnabled(true);
     }
 
     public void render(DrawContext context, MinecraftClient client) {
         if (!isEnabled() || client.player == null) return;
-        int x = 2;
-        int y = client.getWindow().getScaledHeight() - 60;
+        int x = 2, y = client.getWindow().getScaledHeight() - 60;
         EquipmentSlot[] slots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
         for (int i = 0; i < slots.length; i++) {
             ItemStack stack = client.player.getEquippedStack(slots[i]);
