@@ -1,6 +1,8 @@
 package com.hypixelclient.module;
 
 import org.lwjgl.glfw.GLFW;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Module {
     private final String name;
@@ -8,6 +10,7 @@ public abstract class Module {
     private final Category category;
     private boolean enabled;
     private int keybind;
+    private final List<Setting> settings = new ArrayList<>();
 
     public Module(String name, String description, Category category, int defaultKey) {
         this.name = name;
@@ -36,10 +39,16 @@ public abstract class Module {
         else onDisable();
     }
 
+    protected Setting addSetting(Setting setting) {
+        settings.add(setting);
+        return setting;
+    }
+
     public String getName() { return name; }
     public String getDescription() { return description; }
     public Category getCategory() { return category; }
     public boolean isEnabled() { return enabled; }
     public int getKeybind() { return keybind; }
     public void setKeybind(int key) { this.keybind = key; }
+    public List<Setting> getSettings() { return settings; }
 }
