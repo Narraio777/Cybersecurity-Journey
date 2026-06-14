@@ -14,6 +14,7 @@ import com.hypixelclient.module.movement.BunnyHopModule;
 import com.hypixelclient.module.movement.SafeWalkModule;
 import com.hypixelclient.module.movement.SpeedModule;
 import com.hypixelclient.module.movement.NinjaBridgeModule;
+import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.SprintResetModule;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
 import com.hypixelclient.module.visual.FullBrightModule;
@@ -46,6 +47,7 @@ public class ModuleManager {
         register(new AutoSprintModule());
         register(new AutoBridgeModule());
         register(new NinjaBridgeModule());
+        register(new SneakBridgeModule());
         register(new SafeWalkModule());
         register(new SprintResetModule());
         register(new BunnyHopModule());
