@@ -41,6 +41,7 @@ public class HypixelClient implements ClientModInitializer {
             moduleManager.get(FPSDisplayModule.class).render(context, client);
             moduleManager.get(PingDisplayModule.class).render(context, client);
             moduleManager.get(CPSCounterModule.class).render(context, client);
+            moduleManager.get(ReachDisplayModule.class).render(context, client);
             moduleManager.get(HypixelAPIModule.class).render(context, client);
             moduleManager.get(CustomCrosshairModule.class).render(context, client);
         });
