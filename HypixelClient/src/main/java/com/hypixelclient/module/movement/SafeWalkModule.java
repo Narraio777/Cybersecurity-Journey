@@ -6,6 +6,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class SafeWalkModule extends Module {
     public SafeWalkModule() {
-        super("SafeWalk", "Prevents falling off edges by simulating sneak", Category.MOVEMENT, GLFW.GLFW_KEY_G);
+        super("SafeWalk", "Prevents you from walking off edges", Category.MOVEMENT, GLFW.GLFW_KEY_G);
     }
 }

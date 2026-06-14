@@ -15,12 +15,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class HypixelAPIModule extends Module {
-    private volatile String cachedStats = "";
+    private String cachedStats = "";
     private String lastUUID = "";
     private final HttpClient httpClient = HttpClient.newHttpClient();
 
     public HypixelAPIModule() {
-        super("StatsDisplay", "Shows your Hypixel network level via the API", Category.API);
+        super("StatsDisplay", "Shows Hypixel stats for yourself or targeted player", Category.API);
     }
 
     @Override
@@ -51,11 +51,9 @@ public class HypixelAPIModule extends Module {
                 if (root.get("success").getAsBoolean()) {
                     JsonObject player = root.getAsJsonObject("player");
                     long networkExp = player.has("networkExp") ? player.get("networkExp").getAsLong() : 0;
-                    int level = (int) Math.floor(
-                        (Math.sqrt(networkExp + 15312.5) - 125.0 / Math.sqrt(2)) / (25 * Math.sqrt(2))
-                    );
+                    int level = (int) Math.floor((Math.sqrt(networkExp + 15312.5) - 125.0 / Math.sqrt(2)) / (25 * Math.sqrt(2)));
                     String name = player.get("displayname").getAsString();
-                    cachedStats = name + " | Level " + level;
+                    cachedStats = "§b" + name + " §7| §aLevel " + level;
                 } else {
                     cachedStats = "API Error: " + root.get("cause").getAsString();
                 }
@@ -66,8 +64,9 @@ public class HypixelAPIModule extends Module {
     }
 
     public void render(DrawContext context, MinecraftClient client) {
-        if (!isEnabled() || cachedStats.isBlank()) return;
-        int x = client.getWindow().getScaledWidth() / 2 - client.textRenderer.getWidth(cachedStats) / 2;
-        context.drawText(client.textRenderer, cachedStats, x, 2, 0xFFFFFFFF, true);
+        if (!isEnabled()) return;
+        int x = client.getWindow().getScaledWidth() / 2 - 50;
+        int y = 2;
+        context.drawText(client.textRenderer, cachedStats, x, y, 0xFFFFFFFF, true);
     }
 }

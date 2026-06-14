@@ -21,9 +21,9 @@ public class ModuleScreen extends Screen {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         renderBackground(context, mouseX, mouseY, delta);
         context.drawCenteredTextWithShadow(textRenderer, "HypixelClient Modules", width / 2, 8, 0xFFFFFF);
-
         Category[] categories = Category.values();
-        int totalWidth = categories.length * (PANEL_WIDTH + PADDING);
+        int cols = categories.length;
+        int totalWidth = cols * (PANEL_WIDTH + PADDING);
         int startX = (width - totalWidth) / 2;
         int startY = 25;
 
@@ -38,14 +38,12 @@ public class ModuleScreen extends Screen {
             for (int i = 0; i < mods.size(); i++) {
                 Module mod = mods.get(i);
                 int btnY = startY + 14 + i * (BUTTON_HEIGHT + 2);
-                boolean hovered = mouseX >= panelX && mouseX <= panelX + PANEL_WIDTH
-                               && mouseY >= btnY && mouseY <= btnY + BUTTON_HEIGHT;
+                boolean hovered = mouseX >= panelX && mouseX <= panelX + PANEL_WIDTH && mouseY >= btnY && mouseY <= btnY + BUTTON_HEIGHT;
                 int bg = mod.isEnabled() ? 0xFF005500 : (hovered ? 0xFF444444 : 0xFF222222);
                 context.fill(panelX, btnY, panelX + PANEL_WIDTH, btnY + BUTTON_HEIGHT, bg);
                 context.drawText(textRenderer, mod.getName(), panelX + 4, btnY + 6, 0xFFFFFFFF, false);
-                String state = mod.isEnabled() ? "ON" : "OFF";
-                int stateColor = mod.isEnabled() ? 0xFF00FF00 : 0xFFFF4444;
-                context.drawText(textRenderer, state, panelX + PANEL_WIDTH - 4 - textRenderer.getWidth(state), btnY + 6, stateColor, false);
+                String state = mod.isEnabled() ? "§aON" : "§cOFF";
+                context.drawText(textRenderer, state, panelX + PANEL_WIDTH - 24, btnY + 6, 0xFFFFFFFF, false);
             }
         }
         super.render(context, mouseX, mouseY, delta);
@@ -54,7 +52,8 @@ public class ModuleScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Category[] categories = Category.values();
-        int totalWidth = categories.length * (PANEL_WIDTH + PADDING);
+        int cols = categories.length;
+        int totalWidth = cols * (PANEL_WIDTH + PADDING);
         int startX = (width - totalWidth) / 2;
         int startY = 25;
 
@@ -65,8 +64,7 @@ public class ModuleScreen extends Screen {
 
             for (int i = 0; i < mods.size(); i++) {
                 int btnY = startY + 14 + i * (BUTTON_HEIGHT + 2);
-                if (mouseX >= panelX && mouseX <= panelX + PANEL_WIDTH
-                 && mouseY >= btnY && mouseY <= btnY + BUTTON_HEIGHT) {
+                if (mouseX >= panelX && mouseX <= panelX + PANEL_WIDTH && mouseY >= btnY && mouseY <= btnY + BUTTON_HEIGHT) {
                     mods.get(i).toggle();
                     return true;
                 }

@@ -1,10 +1,11 @@
 package com.hypixelclient.keybind;
 
 import com.hypixelclient.gui.ModuleScreen;
+import com.hypixelclient.module.Module;
 import com.hypixelclient.module.ModuleManager;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,6 +27,15 @@ public class KeybindManager {
         while (openGuiKey.wasPressed()) {
             if (client.currentScreen == null) {
                 client.setScreen(new ModuleScreen());
+            }
+        }
+
+        for (Module module : moduleManager.getModules()) {
+            int key = module.getKeybind();
+            if (key == GLFW.GLFW_KEY_UNKNOWN) continue;
+            long window = client.getWindow().getHandle();
+            if (InputUtil.isKeyPressed(window, key)) {
+                // handled via key release detection in mixin
             }
         }
     }

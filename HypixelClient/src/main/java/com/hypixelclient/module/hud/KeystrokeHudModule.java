@@ -8,7 +8,7 @@ import net.minecraft.client.option.GameOptions;
 
 public class KeystrokeHudModule extends Module {
     public KeystrokeHudModule() {
-        super("KeystrokeHUD", "Shows WASD and mouse button presses on screen", Category.HUD);
+        super("KeystrokeHUD", "Shows WASD and mouse button keystrokes on screen", Category.HUD);
         setEnabled(true);
     }
 
@@ -18,12 +18,12 @@ public class KeystrokeHudModule extends Module {
         int bx = client.getWindow().getScaledWidth() - 55;
         int by = client.getWindow().getScaledHeight() - 60;
 
-        drawKey(context, client, "W",   bx + 17, by,      opts.forwardKey.isPressed());
-        drawKey(context, client, "A",   bx,      by + 14, opts.leftKey.isPressed());
-        drawKey(context, client, "S",   bx + 17, by + 14, opts.backKey.isPressed());
-        drawKey(context, client, "D",   bx + 34, by + 14, opts.rightKey.isPressed());
-        drawKey(context, client, "LMB", bx,      by + 28, opts.attackKey.isPressed());
-        drawKey(context, client, "RMB", bx + 22, by + 28, opts.useKey.isPressed());
+        drawKey(context, client, "W", bx + 17, by,      opts.forwardKey.isPressed());
+        drawKey(context, client, "A", bx,      by + 14, opts.leftKey.isPressed());
+        drawKey(context, client, "S", bx + 17, by + 14, opts.backKey.isPressed());
+        drawKey(context, client, "D", bx + 34, by + 14, opts.rightKey.isPressed());
+        drawKey(context, client, "LMB", bx,    by + 28, opts.attackKey.isPressed());
+        drawKey(context, client, "RMB", bx+22, by + 28, opts.useKey.isPressed());
     }
 
     private void drawKey(DrawContext ctx, MinecraftClient client, String label, int x, int y, boolean pressed) {

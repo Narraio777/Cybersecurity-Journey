@@ -26,7 +26,9 @@ public class ModuleManager {
         register(new CustomCrosshairModule());
     }
 
-    public void register(Module module) { modules.add(module); }
+    public void register(Module module) {
+        modules.add(module);
+    }
 
     public List<Module> getModules() { return modules; }
 

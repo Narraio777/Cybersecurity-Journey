@@ -30,9 +30,9 @@ public abstract class Module {
         else onDisable();
     }
 
-    public void setEnabled(boolean value) {
-        this.enabled = value;
-        if (value) onEnable();
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+        if (enabled) onEnable();
         else onDisable();
     }
 

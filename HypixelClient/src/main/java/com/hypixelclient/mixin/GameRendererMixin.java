@@ -20,7 +20,7 @@ public class GameRendererMixin {
         if (HypixelClient.getInstance() == null) return;
         CustomCrosshairModule mod = HypixelClient.getInstance().getModuleManager().get(CustomCrosshairModule.class);
         if (mod != null && mod.isEnabled()) {
-            // crosshair rendering handled in HUD callback
+            // crosshair rendering handled in onRenderCrosshairPost
         }
     }
 }
