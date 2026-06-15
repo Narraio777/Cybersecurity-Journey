@@ -25,7 +25,10 @@ public class Config {
         try (Reader r = new FileReader(configPath.toFile())) {
             ConfigData loaded = GSON.fromJson(r, ConfigData.class);
             if (loaded != null) data = loaded;
-        } catch (IOException ignored) {}
+        } catch (Exception e) {
+            // Config is corrupt — delete it so the next save creates a clean file.
+            configPath.toFile().delete();
+        }
         if (data == null) data = new ConfigData();
     }
 
@@ -33,20 +36,24 @@ public class Config {
     public void applyToModules(ModuleManager manager) {
         if (data.modules == null) return;
         for (Module m : manager.getModules()) {
-            JsonObject entry = data.modules.getAsJsonObject(m.getName());
-            if (entry == null) continue;
-            if (entry.has("enabled")) m.setEnabled(entry.get("enabled").getAsBoolean());
-            if (entry.has("settings") && !m.getSettings().isEmpty()) {
-                JsonObject settings = entry.getAsJsonObject("settings");
-                for (Setting s : m.getSettings()) {
-                    if (settings.has(s.getName())) {
+            try {
+                JsonObject entry = data.modules.getAsJsonObject(m.getName());
+                if (entry == null) continue;
+                if (entry.has("enabled")) m.setEnabled(entry.get("enabled").getAsBoolean());
+                if (entry.has("settings") && !m.getSettings().isEmpty()) {
+                    JsonObject settings = entry.getAsJsonObject("settings");
+                    for (Setting s : m.getSettings()) {
+                        if (!settings.has(s.getName())) continue;
+                        if (s.getStep() == 0) continue; // un-adjustable setting, skip
                         double saved = settings.get(s.getName()).getAsDouble();
-                        double step  = (s.getMax() - s.getMin()) / Math.max(1, (s.getMax() - s.getMin()) / s.getStep());
-                        // Walk from min toward saved value to land on a valid step.
-                        while (s.getValue() < saved - 0.0001) s.increment();
-                        while (s.getValue() > saved + 0.0001) s.decrement();
+                        int guard = 10000; // prevent infinite loop if step is broken
+                        while (s.getValue() < saved - 0.0001 && guard-- > 0) s.increment();
+                        guard = 10000;
+                        while (s.getValue() > saved + 0.0001 && guard-- > 0) s.decrement();
                     }
                 }
+            } catch (Exception e) {
+                // Skip any module whose config entry is malformed — don't crash on load.
             }
         }
     }

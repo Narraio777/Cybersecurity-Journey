@@ -11,7 +11,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ReachModule extends Module {
     // Vanilla = 3.0. Hypixel AC typically flags above ~3.4. Stay safe.
-    private final Setting reach = addSetting(new Setting("Reach", 3, 3, 6, 0));
+    private final Setting reach = addSetting(new Setting("Reach", 3, 3, 4, 1));
 
     public ReachModule() {
         super("Reach", "Extends your attack reach (server-side limit still applies)", Category.COMBAT, GLFW.GLFW_KEY_UNKNOWN);
