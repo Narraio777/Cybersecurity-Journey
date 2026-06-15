@@ -5,8 +5,12 @@ import com.hypixelclient.module.combat.AimAssistModule;
 import com.hypixelclient.module.combat.AutoClickerModule;
 import com.hypixelclient.module.combat.CriticalsModule;
 import com.hypixelclient.module.combat.FastPlaceModule;
+import com.hypixelclient.module.combat.ReachModule;
 import com.hypixelclient.module.combat.TriggerBotModule;
+import com.hypixelclient.module.visual.HitColorModule;
 import com.hypixelclient.module.hud.CPSCounterModule;
+import com.hypixelclient.module.misc.AntiAfkModule;
+import com.hypixelclient.module.misc.AutoGGModule;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
 import com.hypixelclient.module.movement.NinjaBridgeModule;
@@ -67,6 +71,15 @@ public class MinecraftClientMixin {
 
         AimAssistModule aimAssist = HypixelClient.getInstance().getModuleManager().get(AimAssistModule.class);
         if (aimAssist != null) aimAssist.onTick(client);
+
+        ReachModule reach = HypixelClient.getInstance().getModuleManager().get(ReachModule.class);
+        if (reach != null) reach.onTick(client);
+
+        AntiAfkModule antiAfk = HypixelClient.getInstance().getModuleManager().get(AntiAfkModule.class);
+        if (antiAfk != null) antiAfk.onTick(client);
+
+        AutoGGModule autoGG = HypixelClient.getInstance().getModuleManager().get(AutoGGModule.class);
+        if (autoGG != null) autoGG.onTick(client);
     }
 
     @Inject(at = @At("RETURN"), method = "doItemUse")
@@ -93,6 +106,9 @@ public class MinecraftClientMixin {
         if (target instanceof LivingEntity && target != client.player) {
             SprintResetModule sprintReset = HypixelClient.getInstance().getModuleManager().get(SprintResetModule.class);
             if (sprintReset != null) sprintReset.onHit();
+
+            HitColorModule hitColor = HypixelClient.getInstance().getModuleManager().get(HitColorModule.class);
+            if (hitColor != null) hitColor.registerHit();
         }
     }
 

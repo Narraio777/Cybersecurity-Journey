@@ -1,11 +1,13 @@
 package com.hypixelclient.module.combat;
 
+import com.hypixelclient.HypixelClient;
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import com.hypixelclient.module.Setting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 
@@ -24,6 +26,10 @@ public class TriggerBotModule extends Module {
         Entity target = client.targetedEntity;
         if (!(target instanceof LivingEntity)) return;
         if (target == client.player) return;
+        if (target instanceof PlayerEntity p) {
+            AntiBotModule antiBot = HypixelClient.getInstance().getModuleManager().get(AntiBotModule.class);
+            if (antiBot != null && antiBot.isBot(p)) return;
+        }
 
         long now = System.currentTimeMillis();
         if (now - lastAttack < (long) delay.getValue()) return;

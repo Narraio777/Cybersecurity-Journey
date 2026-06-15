@@ -6,6 +6,7 @@ import com.hypixelclient.module.ModuleManager;
 import com.hypixelclient.module.api.HypixelAPIModule;
 import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
+import com.hypixelclient.module.visual.HitColorModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -27,9 +28,15 @@ public class HypixelClient implements ClientModInitializer {
         instance = this;
         config = new Config();
         moduleManager = new ModuleManager();
+        config.applyToModules(moduleManager); // restore saved states
         keybindManager = new KeybindManager(moduleManager);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> keybindManager.onTick(client));
+        // Save config periodically (every 200 ticks = 10 seconds).
+        final int[] saveTicker = {0};
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (++saveTicker[0] >= 200) { saveTicker[0] = 0; config.save(moduleManager); }
+        });
 
         HudRenderCallback.EVENT.register((context, tickDelta) -> {
             MinecraftClient client = MinecraftClient.getInstance();
@@ -42,6 +49,8 @@ public class HypixelClient implements ClientModInitializer {
             moduleManager.get(PingDisplayModule.class).render(context, client);
             moduleManager.get(CPSCounterModule.class).render(context, client);
             moduleManager.get(ReachDisplayModule.class).render(context, client);
+            moduleManager.get(NametagsModule.class).render(context, client);
+            moduleManager.get(HitColorModule.class).render(context, client);
             moduleManager.get(HypixelAPIModule.class).render(context, client);
             moduleManager.get(CustomCrosshairModule.class).render(context, client);
         });

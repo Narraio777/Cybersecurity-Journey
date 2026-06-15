@@ -2,12 +2,16 @@ package com.hypixelclient.module;
 
 import com.hypixelclient.module.api.HypixelAPIModule;
 import com.hypixelclient.module.combat.AimAssistModule;
+import com.hypixelclient.module.combat.AntiBotModule;
 import com.hypixelclient.module.combat.AutoClickerModule;
 import com.hypixelclient.module.combat.CriticalsModule;
 import com.hypixelclient.module.combat.FastPlaceModule;
+import com.hypixelclient.module.combat.ReachModule;
 import com.hypixelclient.module.combat.TriggerBotModule;
 import com.hypixelclient.module.combat.VelocityModule;
 import com.hypixelclient.module.hud.*;
+import com.hypixelclient.module.misc.AntiAfkModule;
+import com.hypixelclient.module.misc.AutoGGModule;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
@@ -17,8 +21,12 @@ import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.SprintResetModule;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
+import com.hypixelclient.module.visual.ESPModule;
 import com.hypixelclient.module.visual.FullBrightModule;
+import com.hypixelclient.module.visual.HitColorModule;
+import com.hypixelclient.module.visual.NoFireModule;
 import com.hypixelclient.module.visual.NoWeatherModule;
+import com.hypixelclient.module.visual.ZoomModule;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +44,7 @@ public class ModuleManager {
         register(new PingDisplayModule());
         register(new CPSCounterModule());
         register(new ReachDisplayModule());
+        register(new NametagsModule());
         // Combat
         register(new AutoClickerModule());
         register(new AimAssistModule());
@@ -43,6 +52,8 @@ public class ModuleManager {
         register(new TriggerBotModule());
         register(new CriticalsModule());
         register(new VelocityModule());
+        register(new ReachModule());
+        register(new AntiBotModule());
         // Movement
         register(new AutoSprintModule());
         register(new AutoBridgeModule());
@@ -56,6 +67,13 @@ public class ModuleManager {
         register(new FullBrightModule());
         register(new CustomCrosshairModule());
         register(new NoWeatherModule());
+        register(new ESPModule());
+        register(new ZoomModule());
+        register(new NoFireModule());
+        register(new HitColorModule());
+        // Misc
+        register(new AntiAfkModule());
+        register(new AutoGGModule());
         // API
         register(new HypixelAPIModule());
     }

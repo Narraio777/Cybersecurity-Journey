@@ -1,10 +1,12 @@
 package com.hypixelclient.module.combat;
 
+import com.hypixelclient.HypixelClient;
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import com.hypixelclient.module.Setting;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Hand;
 import org.lwjgl.glfw.GLFW;
 import java.util.Random;
@@ -33,10 +35,13 @@ public class AutoClickerModule extends Module {
         if (now - lastClick < delay) return;
 
         Entity target = client.targetedEntity;
-        if (target != null) {
-            client.interactionManager.attackEntity(client.player, target);
-            client.player.swingHand(Hand.MAIN_HAND);
-            lastClick = now;
+        if (target == null) return;
+        if (target instanceof PlayerEntity p) {
+            AntiBotModule antiBot = HypixelClient.getInstance().getModuleManager().get(AntiBotModule.class);
+            if (antiBot != null && antiBot.isBot(p)) return;
         }
+        client.interactionManager.attackEntity(client.player, target);
+        client.player.swingHand(Hand.MAIN_HAND);
+        lastClick = now;
     }
 }

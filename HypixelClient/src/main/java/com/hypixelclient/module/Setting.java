@@ -20,6 +20,7 @@ public class Setting {
     public double getMin() { return min; }
     public double getMax() { return max; }
 
+    public double getStep() { return step; }
     public void increment() { value = Math.min(max, value + step); }
     public void decrement() { value = Math.max(min, value - step); }
 

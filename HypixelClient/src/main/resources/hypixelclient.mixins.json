@@ -6,7 +6,11 @@
     "MinecraftClientMixin",
     "ClientPlayerEntityMixin",
     "LivingEntityMixin",
-    "ScreenBlurMixin"
+    "ScreenBlurMixin",
+    "EntityMixin",
+    "GameRendererMixin",
+    "InGameHudMixin",
+    "ChatHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

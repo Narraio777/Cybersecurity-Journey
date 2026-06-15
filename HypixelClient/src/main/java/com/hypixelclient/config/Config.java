@@ -1,7 +1,9 @@
 package com.hypixelclient.config;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.hypixelclient.module.Module;
+import com.hypixelclient.module.ModuleManager;
+import com.hypixelclient.module.Setting;
 import net.fabricmc.loader.api.FabricLoader;
 import java.io.*;
 import java.nio.file.Path;
@@ -13,25 +15,57 @@ public class Config {
 
     public Config() {
         configPath = FabricLoader.getInstance().getConfigDir().resolve("hypixelclient.json");
-        load();
+        data = new ConfigData();
+        loadBase();
     }
 
-    public void load() {
-        if (configPath.toFile().exists()) {
-            try (Reader reader = new FileReader(configPath.toFile())) {
-                data = GSON.fromJson(reader, ConfigData.class);
-            } catch (IOException e) {
-                data = new ConfigData();
-            }
-        } else {
-            data = new ConfigData();
-        }
+    // Load API key and other primitive settings (called at startup before modules exist).
+    private void loadBase() {
+        if (!configPath.toFile().exists()) return;
+        try (Reader r = new FileReader(configPath.toFile())) {
+            ConfigData loaded = GSON.fromJson(r, ConfigData.class);
+            if (loaded != null) data = loaded;
+        } catch (IOException ignored) {}
         if (data == null) data = new ConfigData();
     }
 
-    public void save() {
-        try (Writer writer = new FileWriter(configPath.toFile())) {
-            GSON.toJson(data, writer);
+    // Called after ModuleManager is ready — restores module states and settings.
+    public void applyToModules(ModuleManager manager) {
+        if (data.modules == null) return;
+        for (Module m : manager.getModules()) {
+            JsonObject entry = data.modules.getAsJsonObject(m.getName());
+            if (entry == null) continue;
+            if (entry.has("enabled")) m.setEnabled(entry.get("enabled").getAsBoolean());
+            if (entry.has("settings") && !m.getSettings().isEmpty()) {
+                JsonObject settings = entry.getAsJsonObject("settings");
+                for (Setting s : m.getSettings()) {
+                    if (settings.has(s.getName())) {
+                        double saved = settings.get(s.getName()).getAsDouble();
+                        double step  = (s.getMax() - s.getMin()) / Math.max(1, (s.getMax() - s.getMin()) / s.getStep());
+                        // Walk from min toward saved value to land on a valid step.
+                        while (s.getValue() < saved - 0.0001) s.increment();
+                        while (s.getValue() > saved + 0.0001) s.decrement();
+                    }
+                }
+            }
+        }
+    }
+
+    // Serialize all module states and settings back to disk.
+    public void save(ModuleManager manager) {
+        if (data.modules == null) data.modules = new JsonObject();
+        for (Module m : manager.getModules()) {
+            JsonObject entry = new JsonObject();
+            entry.addProperty("enabled", m.isEnabled());
+            if (!m.getSettings().isEmpty()) {
+                JsonObject settings = new JsonObject();
+                for (Setting s : m.getSettings()) settings.addProperty(s.getName(), s.getValue());
+                entry.add("settings", settings);
+            }
+            data.modules.add(m.getName(), entry);
+        }
+        try (Writer w = new FileWriter(configPath.toFile())) {
+            GSON.toJson(data, w);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -41,13 +75,9 @@ public class Config {
 
     public static class ConfigData {
         public String hypixelApiKey = "";
-        public boolean armorHudEnabled = true;
-        public boolean potionHudEnabled = true;
-        public boolean keystrokeHudEnabled = true;
-        public boolean fullBrightEnabled = false;
-        public boolean customCrosshairEnabled = false;
-        public boolean autoBridgeEnabled = false;
-        public boolean safeWalkEnabled = false;
-        public boolean statsDisplayEnabled = false;
+        public JsonObject modules = new JsonObject();
+
+        // Helper getters so existing code that reads these booleans keeps compiling.
+        public double getStep() { return 1; }
     }
 }
