@@ -4,7 +4,9 @@ import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import com.hypixelclient.module.Setting;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 public class ReachModule extends Module {
@@ -15,9 +17,15 @@ public class ReachModule extends Module {
         super("Reach", "Extends your attack reach (server-side limit still applies)", Category.COMBAT, GLFW.GLFW_KEY_UNKNOWN);
     }
 
+    private EntityAttributeInstance getAttribute(MinecraftClient client) {
+        if (client.player == null) return null;
+        return Registries.ATTRIBUTE.getEntry(Identifier.of("minecraft", "player.entity_interaction_range"))
+            .map(e -> client.player.getAttributeInstance(e))
+            .orElse(null);
+    }
+
     public void onTick(MinecraftClient client) {
-        if (client.player == null) return;
-        var attr = client.player.getAttributeInstance(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
+        var attr = getAttribute(client);
         if (attr == null) return;
         double target = isEnabled() ? reach.getValue() : 3.0;
         if (attr.getBaseValue() != target) attr.setBaseValue(target);
@@ -25,9 +33,7 @@ public class ReachModule extends Module {
 
     @Override
     public void onDisable() {
-        MinecraftClient client = MinecraftClient.getInstance();
-        if (client.player == null) return;
-        var attr = client.player.getAttributeInstance(EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE);
+        var attr = getAttribute(MinecraftClient.getInstance());
         if (attr != null) attr.setBaseValue(3.0);
     }
 }

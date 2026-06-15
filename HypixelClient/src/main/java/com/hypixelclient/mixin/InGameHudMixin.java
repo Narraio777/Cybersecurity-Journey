@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class InGameHudMixin {
 
     // Cancel the fire overlay render. require=0 so a wrong Yarn name won't crash.
-    @Inject(method = "renderFireOverlay", at = @At("HEAD"), cancellable = true, require = 0)
+    @Inject(method = "renderFireOverlay(Lnet/minecraft/client/gui/DrawContext;)V", at = @At("HEAD"), cancellable = true, require = 0)
     private void noFire(CallbackInfo ci) {
         if (shouldCancel()) ci.cancel();
     }
