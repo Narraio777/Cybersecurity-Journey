@@ -13,15 +13,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
+    // getFov returns float in 1.21.4 — must use CallbackInfoReturnable<Float>.
     @Inject(method = "getFov", at = @At("RETURN"), cancellable = true, require = 0)
-    private void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir) {
+    private void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Float> cir) {
         if (HypixelClient.getInstance() == null) return;
         ZoomModule zoom = HypixelClient.getInstance().getModuleManager().get(ZoomModule.class);
         if (zoom == null || !zoom.isEnabled()) return;
-        // Only zoom when the C key is physically held.
         long win = net.minecraft.client.MinecraftClient.getInstance().getWindow().getHandle();
         if (GLFW.glfwGetKey(win, GLFW.GLFW_KEY_C) == GLFW.GLFW_PRESS) {
-            cir.setReturnValue(zoom.getZoomFov());
+            cir.setReturnValue((float) zoom.getZoomFov());
         }
     }
 }
