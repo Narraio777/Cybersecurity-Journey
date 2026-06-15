@@ -38,12 +38,17 @@ public class NinjaBridgeModule extends Module {
                       || client.options.rightKey.isPressed();
         if (!moving) return;
 
-        // Only bridge over air.
-        BlockPos target = client.player.getBlockPos().down();
-        if (!client.world.getBlockState(target).isAir()) return;
-
         // Need a block in hand.
         if (!(client.player.getMainHandStack().getItem() instanceof BlockItem)) return;
+
+        // Staircase: while jumping and rising, place at FEET level instead of below
+        // so each jump steps you up one tier. Otherwise place below for a flat bridge.
+        boolean staircasing = client.options.jumpKey.isPressed()
+                           && client.player.getVelocity().y > 0;
+        BlockPos target = staircasing
+            ? client.player.getBlockPos()         // feet level — builds a step up
+            : client.player.getBlockPos().down();  // below — flat bridge
+        if (!client.world.getBlockState(target).isAir()) return;
 
         // Variable cooldown based on Delay ticks setting.
         long tickMs = (long)(delay.getValue()) * 50L;
