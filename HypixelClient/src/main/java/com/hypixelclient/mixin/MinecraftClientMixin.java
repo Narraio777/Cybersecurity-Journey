@@ -7,6 +7,7 @@ import com.hypixelclient.module.combat.CriticalsModule;
 import com.hypixelclient.module.combat.FastPlaceModule;
 import com.hypixelclient.module.combat.ReachModule;
 import com.hypixelclient.module.combat.TriggerBotModule;
+import com.hypixelclient.module.visual.FullBrightModule;
 import com.hypixelclient.module.visual.HitColorModule;
 import com.hypixelclient.module.hud.CPSCounterModule;
 import com.hypixelclient.module.misc.AntiAfkModule;
@@ -55,6 +56,9 @@ public class MinecraftClientMixin {
 
         BunnyHopModule bunnyHop = HypixelClient.getInstance().getModuleManager().get(BunnyHopModule.class);
         if (bunnyHop != null) bunnyHop.onTick(client);
+
+        FullBrightModule fullBright = HypixelClient.getInstance().getModuleManager().get(FullBrightModule.class);
+        if (fullBright != null) fullBright.onTick(client);
 
         AutoClickerModule autoClicker = HypixelClient.getInstance().getModuleManager().get(AutoClickerModule.class);
         if (autoClicker != null) autoClicker.onTick(client);
