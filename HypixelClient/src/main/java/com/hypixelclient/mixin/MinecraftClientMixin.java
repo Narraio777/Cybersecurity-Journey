@@ -17,6 +17,7 @@ import com.hypixelclient.module.movement.AutoSprintModule;
 import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
+import com.hypixelclient.module.movement.SafeWalkModule;
 import com.hypixelclient.module.movement.SprintResetModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -53,6 +54,9 @@ public class MinecraftClientMixin {
         // SprintReset must run after AutoSprint so it can override sprint during the W-Tap window.
         SprintResetModule sprintReset = HypixelClient.getInstance().getModuleManager().get(SprintResetModule.class);
         if (sprintReset != null) sprintReset.onTick(client);
+
+        SafeWalkModule safeWalk = HypixelClient.getInstance().getModuleManager().get(SafeWalkModule.class);
+        if (safeWalk != null) safeWalk.onTick(client);
 
         BunnyHopModule bunnyHop = HypixelClient.getInstance().getModuleManager().get(BunnyHopModule.class);
         if (bunnyHop != null) bunnyHop.onTick(client);
