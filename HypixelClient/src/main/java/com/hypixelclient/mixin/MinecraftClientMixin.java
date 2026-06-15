@@ -16,7 +16,6 @@ import com.hypixelclient.module.movement.AutoSprintModule;
 import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
-import com.hypixelclient.module.movement.SpeedModule;
 import com.hypixelclient.module.movement.SprintResetModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -56,9 +55,6 @@ public class MinecraftClientMixin {
 
         BunnyHopModule bunnyHop = HypixelClient.getInstance().getModuleManager().get(BunnyHopModule.class);
         if (bunnyHop != null) bunnyHop.onTick(client);
-
-        SpeedModule speed = HypixelClient.getInstance().getModuleManager().get(SpeedModule.class);
-        if (speed != null) speed.onTick(client);
 
         AutoClickerModule autoClicker = HypixelClient.getInstance().getModuleManager().get(AutoClickerModule.class);
         if (autoClicker != null) autoClicker.onTick(client);

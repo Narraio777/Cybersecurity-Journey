@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
-    @Inject(at = @At("RETURN"), method = "takeKnockback")
+    @Inject(at = @At("RETURN"), method = "takeKnockback(DDD)V", require = 0)
     private void onTakeKnockback(double strength, double x, double z, CallbackInfo ci) {
         if (HypixelClient.getInstance() == null) return;
 

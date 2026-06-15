@@ -7,6 +7,7 @@ import com.hypixelclient.module.api.HypixelAPIModule;
 import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
 import com.hypixelclient.module.misc.AutoGGModule;
+import com.hypixelclient.module.movement.SpeedModule;
 import com.hypixelclient.module.visual.HitColorModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -34,6 +35,12 @@ public class HypixelClient implements ClientModInitializer {
         keybindManager = new KeybindManager(moduleManager);
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> keybindManager.onTick(client));
+        // SpeedModule runs at END of tick so it applies AFTER MC has calculated movement velocity.
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (client.player == null) return;
+            SpeedModule speed = moduleManager.get(SpeedModule.class);
+            if (speed != null) speed.onTick(client);
+        });
         // Save config periodically (every 200 ticks = 10 seconds).
         final int[] saveTicker = {0};
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

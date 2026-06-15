@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public class EntityMixin {
 
-    @Inject(method = "isGlowing()Z", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isGlowing()Z", at = @At("RETURN"), cancellable = true, require = 0)
     private void onIsGlowing(CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) return; // already glowing, keep it
         if (HypixelClient.getInstance() == null) return;
