@@ -14,12 +14,15 @@ import com.hypixelclient.module.misc.AntiAfkModule;
 import com.hypixelclient.module.misc.AutoGGModule;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
+import com.hypixelclient.module.movement.BlockClutchModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
 import com.hypixelclient.module.movement.SafeWalkModule;
+import com.hypixelclient.module.movement.ScaffoldModule;
 import com.hypixelclient.module.movement.SpeedModule;
 import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.SprintResetModule;
+import com.hypixelclient.module.movement.TowerModule;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
 import com.hypixelclient.module.visual.ESPModule;
 import com.hypixelclient.module.visual.FullBrightModule;
@@ -45,6 +48,7 @@ public class ModuleManager {
         register(new CPSCounterModule());
         register(new ReachDisplayModule());
         register(new NametagsModule());
+        register(new TargetHudModule());
         // Combat
         register(new AutoClickerModule());
         register(new AimAssistModule());
@@ -63,6 +67,9 @@ public class ModuleManager {
         register(new SprintResetModule());
         register(new BunnyHopModule());
         register(new SpeedModule());
+        register(new TowerModule());
+        register(new ScaffoldModule());
+        register(new BlockClutchModule());
         // Visual
         register(new FullBrightModule());
         register(new CustomCrosshairModule());

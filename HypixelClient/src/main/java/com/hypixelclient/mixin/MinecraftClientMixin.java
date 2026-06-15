@@ -14,11 +14,14 @@ import com.hypixelclient.module.misc.AntiAfkModule;
 import com.hypixelclient.module.misc.AutoGGModule;
 import com.hypixelclient.module.movement.AutoBridgeModule;
 import com.hypixelclient.module.movement.AutoSprintModule;
-import com.hypixelclient.module.movement.NinjaBridgeModule;
-import com.hypixelclient.module.movement.SneakBridgeModule;
+import com.hypixelclient.module.movement.BlockClutchModule;
 import com.hypixelclient.module.movement.BunnyHopModule;
+import com.hypixelclient.module.movement.NinjaBridgeModule;
 import com.hypixelclient.module.movement.SafeWalkModule;
+import com.hypixelclient.module.movement.ScaffoldModule;
+import com.hypixelclient.module.movement.SneakBridgeModule;
 import com.hypixelclient.module.movement.SprintResetModule;
+import com.hypixelclient.module.movement.TowerModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.client.MinecraftClient;
@@ -78,6 +81,15 @@ public class MinecraftClientMixin {
 
         ReachModule reach = HypixelClient.getInstance().getModuleManager().get(ReachModule.class);
         if (reach != null) reach.onTick(client);
+
+        TowerModule tower = HypixelClient.getInstance().getModuleManager().get(TowerModule.class);
+        if (tower != null) tower.onTick(client);
+
+        ScaffoldModule scaffold = HypixelClient.getInstance().getModuleManager().get(ScaffoldModule.class);
+        if (scaffold != null) scaffold.onTick(client);
+
+        BlockClutchModule blockClutch = HypixelClient.getInstance().getModuleManager().get(BlockClutchModule.class);
+        if (blockClutch != null) blockClutch.onTick(client);
 
         AntiAfkModule antiAfk = HypixelClient.getInstance().getModuleManager().get(AntiAfkModule.class);
         if (antiAfk != null) antiAfk.onTick(client);
