@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
-    @Inject(at = @At("RETURN"), method = "isAutoJumpEnabled", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "isAutoJumpEnabled()Z", cancellable = true)
     private void onIsAutoJumpEnabled(CallbackInfoReturnable<Boolean> cir) {
         if (HypixelClient.getInstance() == null) return;
         SafeWalkModule safeWalk = HypixelClient.getInstance().getModuleManager().get(SafeWalkModule.class);
@@ -19,7 +19,7 @@ public class ClientPlayerEntityMixin {
         }
     }
 
-    @Inject(at = @At("RETURN"), method = "isSneaking", cancellable = true)
+    @Inject(at = @At("RETURN"), method = "isSneaking()Z", cancellable = true)
     private void onIsSneaking(CallbackInfoReturnable<Boolean> cir) {
         if (HypixelClient.getInstance() == null) return;
         SafeWalkModule safeWalk = HypixelClient.getInstance().getModuleManager().get(SafeWalkModule.class);

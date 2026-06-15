@@ -6,9 +6,11 @@ import com.hypixelclient.module.ModuleManager;
 import com.hypixelclient.module.api.HypixelAPIModule;
 import com.hypixelclient.module.hud.*;
 import com.hypixelclient.module.visual.CustomCrosshairModule;
+import com.hypixelclient.module.misc.AutoGGModule;
 import com.hypixelclient.module.visual.HitColorModule;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.message.v1.ClientReceiveMessageEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
@@ -53,6 +55,18 @@ public class HypixelClient implements ClientModInitializer {
             moduleManager.get(HitColorModule.class).render(context, client);
             moduleManager.get(HypixelAPIModule.class).render(context, client);
             moduleManager.get(CustomCrosshairModule.class).render(context, client);
+        });
+
+        // AutoGG: listen for Hypixel game-end messages via Fabric API (safer than a chat mixin).
+        ClientReceiveMessageEvents.GAME.register((message, overlay) -> {
+            if (overlay) return;
+            AutoGGModule gg = moduleManager.get(AutoGGModule.class);
+            if (gg == null) return;
+            String text = message.getString().toLowerCase();
+            if (text.contains("winner") || text.contains("game over") || text.contains("you won")
+             || text.contains("victory") || text.contains("defeat") || text.contains("eliminated")) {
+                gg.onGameEnd();
+            }
         });
 
         LOGGER.info("HypixelClient initialized!");

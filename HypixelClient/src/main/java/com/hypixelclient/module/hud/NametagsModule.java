@@ -7,8 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import org.joml.Matrix4f;
-import org.joml.Vector4f;
 
 public class NametagsModule extends Module {
     private final Setting range = addSetting(new Setting("Range", 32, 8, 64, 4));
@@ -51,41 +49,40 @@ public class NametagsModule extends Module {
         }
     }
 
-    // Projects a world-space position to screen pixel coordinates.
+    // Projects a world-space position to screen pixel coordinates using
+    // yaw/pitch rotation — no getBasicProjectionMatrix needed.
     // Returns null if the point is behind the camera.
     private int[] worldToScreen(double wx, double wy, double wz, MinecraftClient client) {
         try {
             net.minecraft.client.render.Camera cam = client.gameRenderer.getCamera();
-            Vec3d camPos = cam.getPos();
+            Vec3d eye = cam.getPos();
 
-            // Relative to camera
-            double rx = wx - camPos.x;
-            double ry = wy - camPos.y;
-            double rz = wz - camPos.z;
+            double dx = wx - eye.x;
+            double dy = wy - eye.y;
+            double dz = wz - eye.z;
 
-            Matrix4f proj = client.gameRenderer.getBasicProjectionMatrix(
-                client.options.getFov().getValue());
-            Matrix4f view = new Matrix4f();
+            // Yaw rotation (Y-axis, horizontal)
+            double yawRad = Math.toRadians(cam.getYaw() + 180);
+            double cosY   = Math.cos(yawRad), sinY = Math.sin(yawRad);
+            double rx =  dx * cosY + dz * sinY;
+            double rz = -dx * sinY + dz * cosY;
 
-            // Build view matrix from camera rotation
-            float yaw   = (float) Math.toRadians(cam.getYaw());
-            float pitch = (float) Math.toRadians(cam.getPitch());
-            view.rotateX(pitch).rotateY((float) Math.PI + yaw);
+            if (rz <= 0) return null; // behind camera
 
-            Vector4f clip = new Vector4f((float) rx, (float) ry, (float) rz, 1.0f);
-            clip.mul(view).mul(proj);
+            // Pitch rotation (X-axis, vertical)
+            double pitchRad = Math.toRadians(cam.getPitch());
+            double cosP = Math.cos(pitchRad), sinP = Math.sin(pitchRad);
+            double ry2 = dy * cosP - rz * sinP;
+            double rz2 = dy * sinP + rz * cosP;
 
-            if (clip.w <= 0) return null; // behind camera
+            if (rz2 <= 0) return null;
 
-            float ndcX = clip.x / clip.w;
-            float ndcY = clip.y / clip.w;
+            double fov   = client.options.getFov().getValue();
+            double sh    = client.getWindow().getScaledHeight();
+            double scale = (sh / 2.0) / Math.tan(Math.toRadians(fov / 2.0));
 
-            int sw = client.getWindow().getScaledWidth();
-            int sh = client.getWindow().getScaledHeight();
-
-            int sx = (int) ((ndcX + 1f) / 2f * sw);
-            int sy = (int) ((1f - ndcY) / 2f * sh);
-
+            int sx = (int) (client.getWindow().getScaledWidth()  / 2.0 + rx  / rz2 * scale);
+            int sy = (int) (sh / 2.0                             - ry2 / rz2 * scale);
             return new int[]{sx, sy};
         } catch (Exception e) {
             return null;

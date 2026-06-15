@@ -9,8 +9,7 @@
     "ScreenBlurMixin",
     "EntityMixin",
     "GameRendererMixin",
-    "InGameHudMixin",
-    "ChatHudMixin"
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

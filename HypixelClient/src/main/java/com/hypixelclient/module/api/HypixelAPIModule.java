@@ -48,14 +48,16 @@ public class HypixelAPIModule extends Module {
                     .GET().build();
                 HttpResponse<String> resp = httpClient.send(req, HttpResponse.BodyHandlers.ofString());
                 JsonObject root = JsonParser.parseString(resp.body()).getAsJsonObject();
-                if (root.get("success").getAsBoolean()) {
+                if (root.has("success") && root.get("success").getAsBoolean()) {
                     JsonObject player = root.getAsJsonObject("player");
+                    if (player == null) { cachedStats = "No player data"; return; }
                     long networkExp = player.has("networkExp") ? player.get("networkExp").getAsLong() : 0;
                     int level = (int) Math.floor((Math.sqrt(networkExp + 15312.5) - 125.0 / Math.sqrt(2)) / (25 * Math.sqrt(2)));
-                    String name = player.get("displayname").getAsString();
+                    String name = player.has("displayname") ? player.get("displayname").getAsString() : "Unknown";
                     cachedStats = "§b" + name + " §7| §aLevel " + level;
                 } else {
-                    cachedStats = "API Error: " + root.get("cause").getAsString();
+                    String cause = root.has("cause") ? root.get("cause").getAsString() : "Unknown error";
+                    cachedStats = "API Error: " + cause;
                 }
             } catch (Exception e) {
                 cachedStats = "Failed to fetch stats";
