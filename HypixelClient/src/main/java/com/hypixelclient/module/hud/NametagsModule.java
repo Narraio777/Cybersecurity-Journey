@@ -19,18 +19,28 @@ public class NametagsModule extends Module {
 
     public void render(DrawContext context, MinecraftClient client) {
         if (!isEnabled() || client.player == null || client.world == null) return;
+        if (client.player.networkHandler == null) return;
 
         AntiBotModule antiBot = HypixelClient.getInstance().getModuleManager().get(AntiBotModule.class);
+
+        // Build a set of UUIDs that are actually in the tab list (real players only).
+        java.util.Set<java.util.UUID> realPlayers = new java.util.HashSet<>();
+        for (var entry : client.player.networkHandler.getPlayerList()) {
+            realPlayers.add(entry.getProfile().getId());
+        }
 
         double r = range.getValue();
         for (PlayerEntity player : client.world.getPlayers()) {
             if (player == client.player) continue;
             if (client.player.squaredDistanceTo(player) > r * r) continue;
 
-            // Skip NPCs and bots
+            // Skip anyone not in the real tab list (server NPCs, practice dummies, etc.)
+            if (!realPlayers.contains(player.getUuid())) continue;
+
+            // Also skip known bots / npc-prefixed names as a secondary filter
             if (antiBot != null && antiBot.isBot(player)) continue;
-            String rawName = player.getName().getString();
-            if (rawName.toLowerCase().startsWith("npc-") || rawName.toLowerCase().startsWith("npc_")) continue;
+            String rawName = player.getName().getString().toLowerCase();
+            if (rawName.startsWith("npc-") || rawName.startsWith("npc_")) continue;
 
             int[] screen = worldToScreen(player.getX(), player.getY() + player.getHeight() + 0.3, player.getZ(), client);
             if (screen == null) continue;
@@ -44,7 +54,7 @@ public class NametagsModule extends Module {
 
             int hpColor = hp > maxHp * 0.6f ? 0xFF55FF55 : hp > maxHp * 0.3f ? 0xFFFFFF55 : 0xFFFF5555;
 
-            String nameTag = rawName;
+            String nameTag = player.getName().getString();
             String hpTag   = String.format("%.1f ❤", hp);
             String distTag = dist + "m";
 
