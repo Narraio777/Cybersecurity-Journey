@@ -3,6 +3,7 @@ package com.hypixelclient.module.movement;
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import com.hypixelclient.module.Setting;
+import com.hypixelclient.util.Humanizer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Hand;
@@ -112,9 +113,11 @@ public class SneakBridgeModule extends Module {
         float savedYaw   = client.player.getYaw();
         float savedPitch = client.player.getPitch();
 
-        // Aim perfectly, place, restore — all in one tick (invisible to the player).
-        client.player.setYaw(wYaw);
-        client.player.setPitch(wPitch);
+        // Aim at block face with tiny human jitter (±2°) — perfect pixel-aiming is an AC flag.
+        float jYaw   = wYaw   + Humanizer.jitter(0f, 0.08f) * 2f;
+        float jPitch = MathHelper.clamp(wPitch + Humanizer.jitter(0f, 0.06f) * 2f, -90f, 90f);
+        client.player.setYaw(jYaw);
+        client.player.setPitch(jPitch);
 
         BlockHitResult hit = new BlockHitResult(hitVec, face, neighbor, false);
         try {

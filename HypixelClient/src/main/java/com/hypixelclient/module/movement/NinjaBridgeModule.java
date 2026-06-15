@@ -3,6 +3,7 @@ package com.hypixelclient.module.movement;
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
 import com.hypixelclient.module.Setting;
+import com.hypixelclient.util.Humanizer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.BlockItem;
 import net.minecraft.util.Hand;
@@ -74,8 +75,11 @@ public class NinjaBridgeModule extends Module {
             float savedYaw   = client.player.getYaw();
             float savedPitch = client.player.getPitch();
 
-            client.player.setYaw(wantedYaw);
-            client.player.setPitch(MathHelper.clamp(wantedPitch, -90f, 90f));
+            // Slight angle jitter (±2°) — humans never aim the geometric centre exactly.
+            float jYaw   = wantedYaw   + Humanizer.jitter(0f, 0.08f) * 2f;
+            float jPitch = MathHelper.clamp(wantedPitch + Humanizer.jitter(0f, 0.06f) * 2f, -90f, 90f);
+            client.player.setYaw(jYaw);
+            client.player.setPitch(jPitch);
 
             BlockHitResult hit = new BlockHitResult(hitVec, face, neighbor, false);
             try {

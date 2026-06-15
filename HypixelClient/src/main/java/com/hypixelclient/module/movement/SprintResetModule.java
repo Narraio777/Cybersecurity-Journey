@@ -2,11 +2,11 @@ package com.hypixelclient.module.movement;
 
 import com.hypixelclient.module.Category;
 import com.hypixelclient.module.Module;
+import com.hypixelclient.util.Humanizer;
 import net.minecraft.client.MinecraftClient;
 import org.lwjgl.glfw.GLFW;
 
 public class SprintResetModule extends Module {
-    private static final int RESET_TICKS = 2;
     private int resetTicks = 0;
 
     public SprintResetModule() {
@@ -15,7 +15,10 @@ public class SprintResetModule extends Module {
 
     // Called from the attack hook whenever we land a hit on an entity.
     public void onHit() {
-        if (isEnabled()) resetTicks = RESET_TICKS;
+        if (isEnabled()) {
+            // Variable 1-4 tick window: humans don't re-press W at a robotic fixed cadence.
+            resetTicks = Humanizer.gaussianInt(1, 4);
+        }
     }
 
     public void onTick(MinecraftClient client) {
