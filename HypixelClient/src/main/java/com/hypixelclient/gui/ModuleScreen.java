@@ -25,6 +25,10 @@ public class ModuleScreen extends Screen {
         context.fill(0, 0, this.width, this.height, 0x88000000);
         context.drawCenteredTextWithShadow(textRenderer, "§bHypixelClient §7Modules", width / 2, 6, 0xFFFFFF);
 
+        // Changelog button — top-right corner
+        context.fill(width - 72, 2, width - 2, 16, 0xFF333355);
+        context.drawCenteredTextWithShadow(textRenderer, "§7Changelog", width - 37, 6, 0xFFCCCCCC);
+
         Category[] categories = Category.values();
         int startX = (width - categories.length * (PANEL_WIDTH + PADDING)) / 2;
         int startY = 20;
@@ -66,6 +70,12 @@ public class ModuleScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // Changelog button click
+        if (mouseX >= width - 72 && mouseX <= width - 2 && mouseY >= 2 && mouseY <= 16) {
+            if (this.client != null) this.client.setScreen(new ChangelogScreen());
+            return true;
+        }
+
         Category[] categories = Category.values();
         int startX = (width - categories.length * (PANEL_WIDTH + PADDING)) / 2;
         int startY = 20;
