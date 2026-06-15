@@ -5,7 +5,8 @@
   "client": [
     "MinecraftClientMixin",
     "ClientPlayerEntityMixin",
-    "LivingEntityMixin"
+    "LivingEntityMixin",
+    "ScreenBlurMixin"
   ],
   "injectors": {
     "defaultRequire": 1
